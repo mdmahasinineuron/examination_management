@@ -1,6 +1,8 @@
-from app import db
+from extensions import db
 from flask_login import UserMixin
 from datetime import datetime
+
+# Baaki tumhare saare tables/classes yahan rahenge...
 
 # 1. User Table (Authentication & Role Management)
 # Admin, Examiner, aur Student teeno yahi se login karenge[cite: 5]

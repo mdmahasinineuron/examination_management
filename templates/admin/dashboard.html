@@ -1,1 +1,77 @@
-<p> this is admin admin dashboard</p>
+{% extends 'admin/base.html' %}
+
+{% block title %}Dashboard Overview{% endblock %}
+
+{% block content %}
+    <div id="dashboard-tab">
+                        <div class="row g-3 mb-4">
+
+                            <!-- ROW 1 - Component 1 -->
+                            <div class="col-md-4">
+                                <div
+                                    class="card p-3 border-start border-warning border-4">
+                                    <span class="text-muted small">Total
+                                        Courses</span>
+                                    <h3 class="fw-bold mb-0">{{ total_courses |
+                                        default(0) }}</h3>
+                                </div>
+                            </div>
+
+                            <!-- ROW 1 - Component 2 -->
+                            <div class="col-md-4">
+                                <div
+                                    class="card p-3 border-start border-warning border-4">
+                                    <span
+                                        class="text-muted small">Examinations</span>
+                                    <h3 class="fw-bold mb-0">{{ total_exams |
+                                        default(0) }}</h3>
+                                </div>
+                            </div>
+
+                            <!-- ROW 1 - Component 3 -->
+                            <div class="col-md-4">
+                                <div
+                                    class="card p-3 border-start border-warning border-4">
+                                    <span
+                                        class="text-muted small">Examiners</span>
+                                    <h3 class="fw-bold mb-0">{{ total_examiners
+                                        | default(0) }}</h3>
+                                </div>
+                            </div>
+
+                            <!-- ROW 2 - Component 1 -->
+                            <div class="col-md-4">
+                                <div
+                                    class="card p-3 border-start border-warning border-4">
+                                    <span
+                                        class="text-muted small">Students</span>
+                                    <h3 class="fw-bold mb-0">{{ total_students |
+                                        default(0) }}</h3>
+                                </div>
+                            </div>
+
+                            <!-- ROW 2 - Component 2 -->
+                            <div class="col-md-4">
+                                <div
+                                    class="card p-3 border-start border-warning border-4">
+                                    <span class="text-muted small">Exam
+                                        Slots</span>
+                                    <h3 class="fw-bold mb-0">{{ total_slots |
+                                        default(0) }}</h3>
+                                </div>
+                            </div>
+
+                            <!-- ROW 2 - Component 3 -->
+                            <div class="col-md-4">
+                                <div
+                                    class="card p-3 border-start border-warning border-4">
+                                    <span
+                                        class="text-muted small">Bookings</span>
+                                    <h3 class="fw-bold mb-0">{{ total_bookings |
+                                        default(0) }}</h3>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+{% endblock %}

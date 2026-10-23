@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Admin Dashboard - Exam Management</title>
+        <!-- Bootstrap 5 CSS & Icons -->
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+            rel="stylesheet">
+        <link rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+        <style>
+    :root {
+      --main-orange: #f97316;
+      --dark-orange: #ea580c;
+    }
+    body { background-color: #f8fafc; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    .sidebar { background: linear-gradient(180deg, var(--main-orange), var(--dark-orange)); min-height: 100vh; color: white; }
+    .sidebar .nav-link { color: rgba(255, 255, 255, 0.9); font-weight: 500; margin-bottom: 4px; border-radius: 6px; padding: 10px 14px; }
+    .sidebar .nav-link:hover, .sidebar .nav-link.active { color: #000; background-color: #ffffff; font-weight: 600; }
+    .btn-orange { background-color: var(--main-orange); color: white; font-weight: 500; }
+    .btn-orange:hover { background-color: var(--dark-orange); color: white; }
+    .card { border: none; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+  </style>
+    </head>
+    <body>
+
+        <div class="container-fluid">
+            <div class="row">
+
+                <!-- SIDEBAR PANEL -->
+                <div class="col-md-3 col-lg-2 sidebar p-3">
+                    <h4 class="text-white mb-4"><i
+                            class="bi bi-shield-lock me-2"></i>Admin Panel</h4>
+                    <hr class="text-white">
+                    <ul class="nav nav-pills flex-column mb-auto">
+                        <li><a href="#" class="nav-link active"
+                                onclick="showTab('dashboard', this)"><i
+                                    class="bi bi-speedometer2 me-2"></i>
+                                Dashboard</a></li>
+                        <li><a href="#" class="nav-link"
+                                onclick="showTab('courses', this)"><i
+                                    class="bi bi-journal-bookmark me-2"></i>
+                                Courses</a></li>
+                        <li><a href="#" class="nav-link"
+                                onclick="showTab('exams', this)"><i
+                                    class="bi bi-file-earmark-text me-2"></i>
+                                Examinations</a></li>
+                        <li><a href="#" class="nav-link"
+                                onclick="showTab('rubrics', this)"><i
+                                    class="bi bi-list-check me-2"></i> Exam
+                                Rubrics</a></li>
+                        <li><a href="#" class="nav-link"
+                                onclick="showTab('examiners', this)"><i
+                                    class="bi bi-people me-2"></i>
+                                Examiners</a></li>
+                        <li><a href="#" class="nav-link"
+                                onclick="showTab('slots', this)"><i
+                                    class="bi bi-calendar-event me-2"></i> Slots
+                                & Timelines</a></li>
+                        <li><a href="#" class="nav-link"
+                                onclick="showTab('bookings', this)"><i
+                                    class="bi bi-calendar-check me-2"></i>
+                                Bookings</a></li>
+                        <li><a href="#" class="nav-link"
+                                onclick="showTab('directory', this)"><i
+                                    class="bi bi-search me-2"></i> Global
+                                Search</a></li>
+                    </ul>
+                </div>
+
+                <!-- MAIN CONTENT AREA -->
+                <div class="col-md-9 col-lg-10 p-4">
+
+                    <!-- TOP BAR -->
+                    <div
+                        class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-2">
+                        <h2>System Administration</h2>
+                        <a href="{{ url_for('logout') }}"
+                            class="btn btn-outline-danger btn-sm"><i
+                                class="bi bi-box-arrow-right me-1"></i>
+                            Logout</a>
+                    </div>
+
+                    <!-- TAB 1: DASHBOARD OVERVIEW -->
+                    <div id="dashboard-tab">
+                        <div class="row g-3 mb-4">
+
+                            <!-- ROW 1 - Component 1 -->
+                            <div class="col-md-4">
+                                <div
+                                    class="card p-3 border-start border-warning border-4">
+                                    <span class="text-muted small">Total
+                                        Courses</span>
+                                    <h3 class="fw-bold mb-0">{{ total_courses |
+                                        default(0) }}</h3>
+                                </div>
+                            </div>
+
+                            <!-- ROW 1 - Component 2 -->
+                            <div class="col-md-4">
+                                <div
+                                    class="card p-3 border-start border-warning border-4">
+                                    <span
+                                        class="text-muted small">Examinations</span>
+                                    <h3 class="fw-bold mb-0">{{ total_exams |
+                                        default(0) }}</h3>
+                                </div>
+                            </div>
+
+                            <!-- ROW 1 - Component 3 -->
+                            <div class="col-md-4">
+                                <div
+                                    class="card p-3 border-start border-warning border-4">
+                                    <span
+                                        class="text-muted small">Examiners</span>
+                                    <h3 class="fw-bold mb-0">{{ total_examiners
+                                        | default(0) }}</h3>
+                                </div>
+                            </div>
+
+                            <!-- ROW 2 - Component 1 -->
+                            <div class="col-md-4">
+                                <div
+                                    class="card p-3 border-start border-warning border-4">
+                                    <span
+                                        class="text-muted small">Students</span>
+                                    <h3 class="fw-bold mb-0">{{ total_students |
+                                        default(0) }}</h3>
+                                </div>
+                            </div>
+
+                            <!-- ROW 2 - Component 2 -->
+                            <div class="col-md-4">
+                                <div
+                                    class="card p-3 border-start border-warning border-4">
+                                    <span class="text-muted small">Exam
+                                        Slots</span>
+                                    <h3 class="fw-bold mb-0">{{ total_slots |
+                                        default(0) }}</h3>
+                                </div>
+                            </div>
+
+                            <!-- ROW 2 - Component 3 -->
+                            <div class="col-md-4">
+                                <div
+                                    class="card p-3 border-start border-warning border-4">
+                                    <span
+                                        class="text-muted small">Bookings</span>
+                                    <h3 class="fw-bold mb-0">{{ total_bookings |
+                                        default(0) }}</h3>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- TAB 2: COURSES MANAGEMENT (Create, Edit, Remove) -->
+                    <div id="courses-tab" class="d-none">
+                        <div
+                            class="d-flex justify-content-between align-items-center mb-3">
+                            <h4>Course Management</h4>
+                            <button class="btn btn-orange"
+                                data-bs-toggle="modal"
+                                data-bs-target="#courseModal">+ Add
+                                Course</button>
+                        </div>
+                        <div class="card p-3">
+                            <table class="table table-striped align-middle">
+                                <thead><tr><th>ID</th><th>Code</th><th>Course
+                                            Name</th><th>Actions</th></tr></thead>
+                                <tbody>
+                                    <tr>
+                                        <td>1</td><td>CS101</td><td>Data
+                                            Structures & Algorithms</td>
+                                        <td>
+                                            <button
+                                                class="btn btn-sm btn-outline-warning me-1"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#courseModal"><i
+                                                    class="bi bi-pencil"></i>
+                                                Edit</button>
+                                            <button
+                                                class="btn btn-sm btn-outline-danger"><i
+                                                    class="bi bi-trash"></i>
+                                                Delete</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- TAB 3: EXAMINATIONS (Create, Edit, Remove) -->
+                    <div id="exams-tab" class="d-none">
+                        <div
+                            class="d-flex justify-content-between align-items-center mb-3">
+                            <h4>Examinations</h4>
+                            <button class="btn btn-orange"
+                                data-bs-toggle="modal"
+                                data-bs-target="#examModal">+ Create
+                                Exam</button>
+                        </div>
+
+                        <div class="card p-3">
+                            <table class="table table-striped align-middle">
+                                <thead><tr><th>ID</th><th>Course</th><th>Exam
+                                            Name</th><th>Type</th><th>Actions</th></tr></thead>
+                                <tbody>
+                                    <tr>
+                                        <td>101</td><td>CS101</td><td>Mid-Term
+                                            Practical</td><td>Practical</td>
+                                        <td>
+                                            <button
+                                                class="btn btn-sm btn-outline-warning me-1"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#examModal"><i
+                                                    class="bi bi-pencil"></i>
+                                                Edit</button>
+                                            <button
+                                                class="btn btn-sm btn-outline-danger"><i
+                                                    class="bi bi-trash"></i>
+                                                Delete</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- TAB 4: RUBRICS MANAGEMENT (Create & Manage Rubrics) -->
+                    <div id="rubrics-tab" class="d-none">
+                        <div
+                            class="d-flex justify-content-between align-items-center mb-3">
+                            <h4>Examination Rubrics</h4>
+                            <button class="btn btn-orange"
+                                data-bs-toggle="modal"
+                                data-bs-target="#rubricModal">+ Add
+                                Criterion</button>
+                        </div>
+                        <div class="card p-3">
+                            <table class="table table-striped align-middle">
+                                <thead><tr><th>Exam</th><th>Criterion</th><th>Max
+                                            Marks</th><th>Weightage</th><th>Actions</th></tr></thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Mid-Term Practical</td><td>Code
+                                            Efficiency &
+                                            Logic</td><td>20</td><td>40%</td>
+                                        <td>
+                                            <button
+                                                class="btn btn-sm btn-outline-warning me-1"><i
+                                                    class="bi bi-pencil"></i></button>
+                                            <button
+                                                class="btn btn-sm btn-outline-danger"><i
+                                                    class="bi bi-trash"></i></button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- TAB 5: EXAMINERS (Add, Approve, Deactivate) -->
+                    <div id="examiners-tab" class="d-none">
+                        <div
+                            class="d-flex justify-content-between align-items-center mb-3">
+                            <h4>Examiner Directory & Approvals</h4>
+                            <button class="btn btn-orange"
+                                data-bs-toggle="modal"
+                                data-bs-target="#examinerModal">+ Add
+                                Examiner</button>
+                        </div>
+                        <div class="card p-3">
+                            <table class="table table-striped align-middle">
+                                <thead><tr><th>ID</th><th>Name</th><th>Email</th><th>Status</th><th>Actions</th></tr></thead>
+                                <tbody>
+                                    <tr>
+                                        <td>EX-01</td><td>Dr. Alan
+                                            Smith</td><td>alan@univ.edu</td>
+                                        <td><span
+                                                class="badge bg-warning text-dark">Pending</span></td>
+                                        <td>
+                                            <button
+                                                class="btn btn-sm btn-success me-1">Approve</button>
+                                            <button
+                                                class="btn btn-sm btn-danger">Deactivate</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- TAB 6: SLOTS & TIMELINES (Timelines, Toggle Creation/Booking, View Slots) -->
+                    <div id="slots-tab" class="d-none">
+                        <h4 class="mb-3">Examination Timelines & Slot
+                            Control</h4>
+
+                        <!-- Toggle Controls -->
+                        <div class="card p-3 mb-4 bg-light">
+                            <div class="row align-items-center">
+                                <div class="col-md-6 border-end">
+                                    <h5>Examiner Slot Creation Access</h5>
+                                    <p class="text-muted small mb-2">Allow or
+                                        block examiners from adding available
+                                        slots.</p>
+                                    <button
+                                        class="btn btn-success btn-sm me-2">Open
+                                        Slot Creation</button>
+                                    <button class="btn btn-danger btn-sm">Close
+                                        Slot Creation</button>
+                                </div>
+                                <div class="col-md-6 ps-4">
+                                    <h5>Student Slot Booking Access</h5>
+                                    <p class="text-muted small mb-2">Allow or
+                                        block students from booking exam
+                                        slots.</p>
+                                    <button
+                                        class="btn btn-success btn-sm me-2">Open
+                                        Student Booking</button>
+                                    <button class="btn btn-danger btn-sm">Close
+                                        Student Booking</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- View All Slots & Change Assigned Examiner -->
+                        <div class="card p-3">
+                            <h5>All Examination Slots</h5>
+                            <table
+                                class="table table-striped align-middle mt-2">
+                                <thead><tr><th>Slot
+                                            ID</th><th>Exam</th><th>Assigned
+                                            Examiner</th><th>Date &
+                                            Time</th><th>Capacity</th><th>Action</th></tr></thead>
+                                <tbody>
+                                    <tr>
+                                        <td>SLOT-501</td><td>Mid-Term
+                                            Practical</td><td>Dr. Alan
+                                            Smith</td><td>Oct 28, 2026 (10:00
+                                            AM)</td><td>10 / 15</td>
+                                        <td>
+                                            <!-- Change Assigned Examiner in Exceptional Situations -->
+                                            <button
+                                                class="btn btn-sm btn-outline-warning"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#changeExaminerModal"><i
+                                                    class="bi bi-person-gear"></i>
+                                                Change Examiner</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- TAB 7: BOOKINGS & RESCHEDULING (Reschedule Student Bookings) -->
+                    <div id="bookings-tab" class="d-none">
+                        <h4 class="mb-3">Student Exam Bookings</h4>
+                        <div class="card p-3">
+                            <table class="table table-striped align-middle">
+                                <thead><tr><th>Booking
+                                            ID</th><th>Student</th><th>Exam</th><th>Booked
+                                            Slot</th><th>Status</th><th>Actions</th></tr></thead>
+                                <tbody>
+                                    <tr>
+                                        <td>BK-901</td><td>Sk Md
+                                            Mahasin</td><td>Mid-Term
+                                            Practical</td><td>Oct 28, 2026
+                                            (10:00 AM)</td>
+                                        <td><span
+                                                class="badge bg-success">Confirmed</span></td>
+                                        <td>
+                                            <!-- Reschedule Examination Booking -->
+                                            <button
+                                                class="btn btn-sm btn-warning"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#rescheduleModal"><i
+                                                    class="bi bi-arrow-repeat"></i>
+                                                Reschedule</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- TAB 8: GLOBAL DIRECTORY & SEARCH (Search Students, Examiners, Exams, Bookings by Name/ID) -->
+                    <div id="directory-tab" class="d-none">
+                        <h4 class="mb-3">System Directory & Live Search</h4>
+                        <div class="card p-3 mb-4">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <input type="text" id="searchInput"
+                                        class="form-control"
+                                        placeholder="Search Students, Examiners, Exams, or Bookings by Name or ID..."
+                                        onkeyup="filterDirectory()">
+                                </div>
+                                <div class="col-md-4">
+                                    <select class="form-select" id="filterType"
+                                        onchange="filterDirectory()">
+                                        <option value="all">All
+                                            Categories</option>
+                                        <option
+                                            value="Student">Students</option>
+                                        <option
+                                            value="Examiner">Examiners</option>
+                                        <option
+                                            value="Exam">Examinations</option>
+                                        <option
+                                            value="Booking">Bookings</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card p-3">
+                            <table class="table table-hover align-middle"
+                                id="directoryTable">
+                                <thead><tr><th>Category</th><th>ID</th><th>Name
+                                            / Title</th><th>Details /
+                                            Status</th></tr></thead>
+                                <tbody>
+                                    <tr><td><span
+                                                class="badge bg-info">Student</span></td><td>STU-101</td><td>Mahasin</td><td>Active
+                                            Student</td></tr>
+                                    <tr><td><span
+                                                class="badge bg-primary">Examiner</span></td><td>EX-01</td><td>Dr.
+                                            Alan Smith</td><td>Department of
+                                            CS</td></tr>
+                                    <tr><td><span
+                                                class="badge bg-warning text-dark">Exam</span></td><td>EXAM-101</td><td>Mid-Term
+                                            Practical</td><td>Status:
+                                            Active</td></tr>
+                                    <tr><td><span
+                                                class="badge bg-secondary">Booking</span></td><td>BK-901</td><td>Mahasin
+                                            - Mid-Term</td><td>Slot: Oct 28,
+                                            10:00 AM</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= MODALS SECTION ================= -->
+
+        <!-- 1. Course Modal -->
+        <div class="modal fade" id="courseModal" tabindex="-1"><div
+                class="modal-dialog"><div class="modal-content"><div
+                        class="modal-header"><h5 class="modal-title">Course
+                            Details</h5><button type="button" class="btn-close"
+                            data-bs-dismiss="modal"></button></div><div
+                        class="modal-body"><input type="text"
+                            class="form-control mb-2"
+                            placeholder="Course Code (e.g. CS101)"><input
+                            type="text" class="form-control mb-2"
+                            placeholder="Course Name"></div><div
+                        class="modal-footer"><button class="btn btn-orange">Save
+                            Course</button></div></div></div></div>
+
+        <!-- 2. Exam Modal -->
+        <div class="modal fade" id="examModal" tabindex="-1"><div
+                class="modal-dialog"><div class="modal-content"><div
+                        class="modal-header"><h5 class="modal-title">Examination
+                            Details</h5><button type="button" class="btn-close"
+                            data-bs-dismiss="modal"></button></div><div
+                        class="modal-body"><input type="text"
+                            class="form-control mb-2"
+                            placeholder="Exam Name"><select
+                            class="form-select mb-2"><option>Practical</option><option>Viva</option><option>Assessment</option></select><label
+                            class="form-label text-muted small">Timeline
+                            Setup</label><input type="date"
+                            class="form-control mb-2"></div><div
+                        class="modal-footer"><button class="btn btn-orange">Save
+                            Exam</button></div></div></div></div>
+
+        <!-- 3. Rubric Modal -->
+        <div class="modal fade" id="rubricModal" tabindex="-1"><div
+                class="modal-dialog"><div class="modal-content"><div
+                        class="modal-header"><h5 class="modal-title">Manage
+                            Rubric</h5><button type="button" class="btn-close"
+                            data-bs-dismiss="modal"></button></div><div
+                        class="modal-body"><input type="text"
+                            class="form-control mb-2"
+                            placeholder="Criterion Name"><input type="number"
+                            class="form-control mb-2"
+                            placeholder="Max Marks"><input type="text"
+                            class="form-control mb-2"
+                            placeholder="Weightage (e.g. 20%)"></div><div
+                        class="modal-footer"><button class="btn btn-orange">Add
+                            Criterion</button></div></div></div></div>
+
+        <!-- 4. Examiner Modal -->
+        <div class="modal fade" id="examinerModal" tabindex="-1"><div
+                class="modal-dialog"><div class="modal-content"><div
+                        class="modal-header"><h5 class="modal-title">Add
+                            Examiner</h5><button type="button" class="btn-close"
+                            data-bs-dismiss="modal"></button></div><div
+                        class="modal-body"><input type="text"
+                            class="form-control mb-2"
+                            placeholder="Full Name"><input type="email"
+                            class="form-control mb-2"
+                            placeholder="Email Address"></div><div
+                        class="modal-footer"><button class="btn btn-orange">Add
+                            Examiner</button></div></div></div></div>
+
+        <!-- 5. Change Examiner Modal -->
+        <div class="modal fade" id="changeExaminerModal" tabindex="-1"><div
+                class="modal-dialog"><div class="modal-content"><div
+                        class="modal-header"><h5 class="modal-title">Reassign
+                            Examiner (Exceptional Situation)</h5><button
+                            type="button" class="btn-close"
+                            data-bs-dismiss="modal"></button></div><div
+                        class="modal-body"><p class="small text-muted">Select
+                            replacement examiner for Slot SLOT-501:</p><select
+                            class="form-select"><option>Dr. Alan
+                                Smith</option><option>Prof. John
+                                Doe</option></select></div><div
+                        class="modal-footer"><button
+                            class="btn btn-orange">Confirm
+                            Change</button></div></div></div></div>
+
+        <!-- 6. Reschedule Booking Modal -->
+        <div class="modal fade" id="rescheduleModal" tabindex="-1"><div
+                class="modal-dialog"><div class="modal-content"><div
+                        class="modal-header"><h5 class="modal-title">Reschedule
+                            Student Booking</h5><button type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"></button></div><div
+                        class="modal-body"><p class="small text-muted">Select
+                            new slot for Student Booking #BK-901:</p><select
+                            class="form-select"><option>Oct 29, 2026 (02:00
+                                PM)</option><option>Oct 30, 2026 (11:00
+                                AM)</option></select></div><div
+                        class="modal-footer"><button class="btn btn-orange">Save
+                            Reschedule</button></div></div></div></div>
+
+        <!-- SIMPLE JS FOR TAB SWITCHING & DIRECTORY SEARCH -->
+        <script>
+  // Tab Switching Logic
+  function showTab(tabName, element) {
+    const tabs = ['dashboard', 'courses', 'exams', 'rubrics', 'examiners', 'slots', 'bookings', 'directory'];
+    tabs.forEach(t => document.getElementById(t + '-tab').classList.add('d-none'));
+    
+    document.getElementById(tabName + '-tab').classList.remove('d-none');
+
+    let links = document.querySelectorAll('.sidebar .nav-link');
+    links.forEach(link => link.classList.remove('active'));
+    element.classList.add('active');
+  }
+
+  // Live Directory Filter (Search by Name or ID)
+  function filterDirectory() {
+    let input = document.getElementById("searchInput").value.toLowerCase();
+    let filterType = document.getElementById("filterType").value;
+    let rows = document.querySelectorAll("#directoryTable tbody tr");
+
+    rows.forEach(row => {
+      let text = row.innerText.toLowerCase();
+      let category = row.cells[0].innerText.trim();
+
+      let matchesSearch = text.includes(input);
+      let matchesCategory = (filterType === "all" || category === filterType);
+
+      if (matchesSearch && matchesCategory) {
+        row.style.display = "";
+      } else {
+        row.style.display = "none";
+      }
+    });
+  }
+</script>
+
+        <!-- Bootstrap 5 JS -->
+        <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    </body>
+</html>

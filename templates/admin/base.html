@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Admin Dashboard - Exam Management{% endblock %}</title>
+    <!-- Bootstrap 5 CSS & Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <style>
+        :root { --main-orange: #f97316; --dark-orange: #ea580c; }
+        body { background-color: #f8fafc; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .sidebar { background: linear-gradient(180deg, var(--main-orange), var(--dark-orange)); min-height: 100vh; color: white; }
+        .sidebar .nav-link { color: rgba(255, 255, 255, 0.9); font-weight: 500; margin-bottom: 4px; border-radius: 6px; padding: 10px 14px; }
+        .sidebar .nav-link:hover, .sidebar .nav-link.active { color: #000; background-color: #ffffff; font-weight: 600; }
+        .btn-orange { background-color: var(--main-orange); color: white; font-weight: 500; }
+        .btn-orange:hover { background-color: var(--dark-orange); color: white; }
+        .card { border: none; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+    </style>
+</head>
+<body>
+
+    <div class="container-fluid">
+        <div class="row">
+
+            <!-- SIDEBAR PANEL -->
+            <div class="col-md-3 col-lg-2 sidebar p-3">
+                <h4 class="text-white mb-4"><i class="bi bi-shield-lock me-2"></i>Admin Panel</h4>
+                <hr class="text-white">
+                <ul class="nav nav-pills flex-column mb-auto">
+                    <!-- Jinja Active Class Logic -->
+                    <li><a href="{{ url_for('admin_dashboard') }}" class="nav-link {% if active_page == 'dashboard' %}active{% endif %}"><i class="bi bi-speedometer2 me-2"></i> Dashboard</a></li>
+                    <li><a href="{{ url_for('admin_courses') }}" class="nav-link {% if active_page == 'courses' %}active{% endif %}"><i class="bi bi-journal-bookmark me-2"></i> Courses</a></li>
+                    <li><a href="{{ url_for('admin_exams') }}" class="nav-link {% if active_page == 'exams' %}active{% endif %}"><i class="bi bi-file-earmark-text me-2"></i> Examinations</a></li>
+                    <li><a href="{{ url_for('admin_rubrics') }}" class="nav-link {% if active_page == 'rubrics' %}active{% endif %}"><i class="bi bi-list-check me-2"></i> Exam Rubrics</a></li>
+                    <li><a href="{{ url_for('admin_examiners') }}" class="nav-link {% if active_page == 'examiners' %}active{% endif %}"><i class="bi bi-people me-2"></i> Examiners</a></li>
+                    <li><a href="{{ url_for('admin_slots') }}" class="nav-link {% if active_page == 'slots' %}active{% endif %}"><i class="bi bi-calendar-event me-2"></i> Slots & Timelines</a></li>
+                    <li><a href="{{ url_for('admin_bookings') }}" class="nav-link {% if active_page == 'bookings' %}active{% endif %}"><i class="bi bi-calendar-check me-2"></i> Bookings</a></li>
+                    <li><a href="{{ url_for('admin_directory') }}" class="nav-link {% if active_page == 'directory' %}active{% endif %}"><i class="bi bi-search me-2"></i> Global Search</a></li>
+                </ul>
+            </div>
+
+            <!-- MAIN CONTENT AREA -->
+            <div class="col-md-9 col-lg-10 p-4">
+
+                <!-- TOP BAR (Common for all pages) -->
+                <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-2">
+                    <h2>System Administration</h2>
+                    <a href="{{ url_for('logout') }}" class="btn btn-outline-danger btn-sm"><i class="bi bi-box-arrow-right me-1"></i> Logout</a>
+                </div>
+
+                <!-- YAHAN HAR ALAG PAGE KA CONTENT AAYEGA -->
+                {% block content %}{% endblock %}
+
+            </div>
+        </div>
+    </div>
+
+    <!-- YAHAN HAR PAGE KE SPECIFIC MODALS AAYENGE -->
+    {% block modals %}{% endblock %}
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- YAHAN PAGE SPECIFIC JS SCRIPTS AAYENGI -->
+    {% block scripts %}{% endblock %}
+
+</body>
+</html>
