@@ -29,6 +29,7 @@ class Course(db.Model):
     course_name = db.Column(db.String(100), nullable=False)
     description = db.Column(db.Text)
     status = db.Column(db.String(20), default='Active')
+    exams = db.relationship('Examination', backref='course', lazy=True)
 
 # 4. Examination Table[cite: 6, 7]
 class Examination(db.Model):

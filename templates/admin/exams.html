@@ -1,0 +1,155 @@
+{% extends 'admin/base.html' %}
+
+{% block title %}Manage Examinations{% endblock %}
+
+{% block content %}
+<!-- 1. Flash Messages -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+      <div class="alert alert-{{ category }} alert-dismissible fade show mb-3" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+
+<!-- 2. Main Content (d-none hata diya gaya hai) -->
+<div id="exams-tab">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4>Examinations</h4>
+        <button type="button" class="btn btn-orange" data-bs-toggle="modal" data-bs-target="#examModal">
+            + Create Exam
+        </button>
+    </div>
+
+    <!-- 3. Dynamic Table -->
+    <div class="card p-3">
+    <!-- 1. Naya div add kiya scrollbar handle karne ke liye -->
+    <div class="table-responsive"> 
+        
+        <!-- 2. Table ki classes mein 'text-nowrap' add kar diya -->
+        <table class="table table-striped align-middle text-nowrap">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Code</th>
+                    <th>Name</th>
+                    <th>Type</th>
+                    <th>Exam Start</th>
+                    <th>Exam End</th>
+                    <th>Slot Start</th>
+                    <th>Slot End</th>
+                    <th>Booking Start</th>
+                    <th>Booking End</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Jinja Loop Start -->
+                {% for exam in exams %}
+                <tr>
+                    <td>{{ exam.id }}</td>
+                    <td>{{ exam.course.course_code }}</td> 
+                    <td>{{ exam.name }}</td>
+                    <td>{{ exam.exam_type }}</td>
+                    <td>{{exam.start_date}}</td>
+                    <td>{{exam.end_date}}</td>
+                    <td>{{exam.slot_creation_start}}</td>
+                    <td>{{exam.slot_creation_end}}</td>
+                    <td>{{exam.slot_booking_start}}</td>
+                    <td>{{exam.slot_booking_end}}</td>
+                    <td>
+                        <span class="badge bg-info text-dark">{{ exam.status }}</span>
+                    </td>
+                    <td>
+                        <!-- Edit Button -->
+                        <button class="btn btn-sm btn-outline-warning me-1" data-bs-toggle="modal" data-bs-target="#editExamModal{{ exam.id }}">
+                            <i class="bi bi-pencil"></i> Edit
+                        </button>
+                        <!-- Delete Button (Route baad mein banayenge) -->
+                        <a href="#" class="btn btn-sm btn-outline-danger" onclick="return confirm('Delete this exam?');">
+                            <i class="bi bi-trash"></i> Delete
+                        </a>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="6" class="text-center text-muted">No examinations found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </Div>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block modals %}
+<!-- 4. Create Exam Modal (Isme abhi Form lagana bacha hai) -->
+<div class="modal fade" id="examModal" tabindex="-1">
+    <div class="modal-dialog">
+        <!-- Ise humne basic form bana diya hai -->
+        <form action="/admin/exams/add" method="POST" class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Create New Examination</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <!-- <input type="text" name="Course Code" id="course_code" class="form-control mb-2" placeholder="Course Code" required> -->
+                 <select name="course_code" class="form-select mb-2" required>
+                    <option value="">Select Course Code</option>
+                    {% for course in courses %}
+                    <option value={{course.course_code}}>{{course.course_code}}</option>
+                    {% endfor %}
+                </select>
+                <input type="text" name="exam_name" id="exam_name" class="form-control mb-2" placeholder="Exam Name" required>
+                <select name="exam_type" class="form-select mb-2" required>
+                    <option value="">Select Exam Type</option>
+                    <option value="Practical">Practical</option>
+                    <option value="Assesment">Assesment</option>
+                    <option value="Viva">Viva</option>
+                </select>
+                <div class="row">
+    <!-- Exam Dates -->
+    <div class="col-md-6 mb-3">
+        <label for="exam_start_date" class="form-label">Exam Start Date</label>
+        <input type="date" name="exam_start_date" id="exam_start_date" class="form-control" required>
+    </div>
+    <div class="col-md-6 mb-3">
+        <label for="exam_end_date" class="form-label">Exam End Date</label>
+        <input type="date" name="exam_end_date" id="exam_end_date" class="form-control" required>
+    </div>
+
+    <!-- Slot Dates -->
+    <div class="col-md-6 mb-3">
+        <label for="slot_start_date" class="form-label">Slot Start Date</label>
+        <input type="date" name="slot_start_date" id="slot_start_date" class="form-control" required>
+    </div>
+    <div class="col-md-6 mb-3">
+        <label for="slot_end_date" class="form-label">Slot End Date</label>
+        <input type="date" name="slot_end_date" id="slot_end_date" class="form-control" required>
+    </div>
+
+    <!-- Booking Dates -->
+    <div class="col-md-6 mb-3">
+        <label for="booking_start_date" class="form-label">Booking Start Date</label>
+        <input type="date" name="booking_start_date" id="booking_start_date" class="form-control" required>
+    </div>
+    <div class="col-md-6 mb-3">
+        <label for="booking_end_date" class="form-label">Booking End Date</label>
+        <input type="date" name="booking_end_date" id="booking_end_date" class="form-control" required>
+    </div>
+</div>
+                <!-- Baaki inputs (dates waghera) hum baad mein detail mein banayenge -->
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-orange">Save Exam</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
