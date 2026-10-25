@@ -130,7 +130,7 @@ def admin_dashboard():
   Courselist = Course.query.all()
   return render_template('admin/dashboard.html', total_courses=total_courses, total_exam=total_examinars,
                          total_examinars=total_examinars,total_student=total_student,total_slots=total_slots,
-                         total_bookings=total_bookings)
+                         total_bookings=total_bookings,total_exams=total_exams,Courselist=Courselist)
 
 @app.route('/admin/courses')
 def admin_courses():
